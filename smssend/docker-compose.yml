@@ -1,0 +1,10 @@
+web:
+    build: .
+    restart: "always"
+    ports:
+      - "8000:8000"
+    # command: gunicorn --bind 0.0.0.0 -p 8000 food_stories.wsgi
+    environment: 
+        - VIRTUAL_HOST=localhost
+        - VIRTUAL_PORT=8000
+        - DEBUG=False
