@@ -1,10 +1,36 @@
-web:
+version: '3'
+
+services:
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    restart: "always"
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./nginx/vhost/:/etc/nginx/vhost.d:ro
+      - ./nginx/conf.d/client_max_body_size.conf:/etc/nginx/conf.d/client_max_body_size.conf:ro
+      - ./static/:/code/static/
+      - ./media/:/code/media/
+
+  # postgres:
+  #   image: postgres
+  #   volumes:
+  #     - ./postgresdb/:/var/lib/postgresql/data
+  #   ports:
+  #     - "5432:5432"
+  #   env_file: ./.env
+
+  web:
     build: .
     restart: "always"
     ports:
       - "8000:8000"
     # command: gunicorn --bind 0.0.0.0 -p 8000 food_stories.wsgi
-    environment: 
-        - VIRTUAL_HOST=localhost
-        - VIRTUAL_PORT=8000
-        - DEBUG=False
+    volumes:
+      - .:/code/
+      - ./static/:/code/static/
+      - ./media/:/code/media/
+    # depends_on:
+    #   - "postgres"
+    env_file: ./.env

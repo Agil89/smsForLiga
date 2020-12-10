@@ -17,11 +17,14 @@ from django.contrib import admin
 from django.urls import path
 from spec.views import PhoneNumber
 
+from rest_framework.views import APIView
+from rest_framework.response import Response
+import requests
+import json
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('number',PhoneNumber.as_view(),name='number')
+    path('number/',PhoneNumber.as_view(),name='numbers'),
 ]
 
-
-
-
+print('asdfdsfasdf')

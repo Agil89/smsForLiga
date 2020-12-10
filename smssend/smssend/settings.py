@@ -76,12 +76,29 @@ WSGI_APPLICATION = 'smssend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
+# if PROD:
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#             'NAME': os.environ.get('POSTGRES_DB'),
+#             'USER': os.environ.get('POSTGRES_USER'),
+#             'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+#             'HOST': os.environ.get('POSTGRES_HOST'),
+#             'PORT': os.environ.get('POSTGRES_PORT')
+#         }
+#     }
+# else:
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#             'NAME': 'trip_db_name',
+#             'USER': 'trip_user_name',
+#             'PASSWORD': '123',
+#             'HOST': 'localhost',
+#             'PORT': '5432'
+#         }
+#     }
+
 
 
 # Password validation
@@ -103,8 +120,13 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
+DOMAIN = os.environ.get('VIRTUAL_HOST','localhost')
+DOMAIN = DOMAIN.split(',')[0]
+SITE_ADDRESS = f'http://{DOMAIN}'
+
 
 LANGUAGE_CODE = 'en-us'
 
@@ -121,3 +143,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+if PROD:
+    STATIC_ROOT = os.path.join(BASE_DIR,'static')
+else:
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR,'static')
+    ]
+
+
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')
